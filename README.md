@@ -9,11 +9,11 @@ Lots of code cleaning to be done, but my times:
 | Challenge | Time | Rank |
 |-----------|------|------|
 | Cactus Single | 00:24.674 | #36 |
-| Cactus | 00:44.160 | #66 |
+| Cactus | 00:41.878 | #55 |
 | Dinosaur | 17:45.008 | #68 |
-| Maze | 02:27.768 | #23 |
+| Maze | 02:15.187 | #15 |
 | Maze Single | 02:41.476 | #21 |
-| Pumpkins | 07:33.905 | #40 |
+| Pumpkins | 07:33.905 | #41 |
 
 ## Cactus Single
 
@@ -27,7 +27,7 @@ the same level, so this slows down this method a bit. It still saved me 10 secon
 
 ## Maze
 
-My best time was just with a BFS. Nothing special going on here really. A* was too expensive for a 6x6, and my time was done using 25 6x6 mazes.
+24 6x6 mazes, 1 8x8 maze. 7 of the mazes have a second drone using a dfs instead of bfs.
 
 ## Maze Single
 

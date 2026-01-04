@@ -260,29 +260,65 @@ def twenty_five_drones():
 		(3+5*0,29-6*1),(3+6*1,29-6*1),(3+6*2,29-6*1),(3+6*3,29-6*1),(3+6*4,29-6*1),
 		(3+5*0,29-6*2),(3+6*1,29-6*2),(3+6*2,29-6*2),(3+6*3,29-6*2),(3+6*4,29-6*2),
 		(3+5*0,29-6*3),(3+6*1,29-6*3),(3+6*2,29-6*3),(3+6*3,29-6*3),(3+6*4,29-6*3),
-		(3+5*0,29-6*4),(3+6*1,29-6*4),(3+6*2,29-6*4),(3+6*3,29-6*4),(3+6*4,29-6*4)
+		(3+5*0,29-6*4),(3+6*1,29-6*4),(3+6*2,29-6*4),(3+6*3,29-6*4),(24,7) #(3+6*4,29-6*4)
 	]
 
+	#no real luck with 16 8x8
+	# ls = [
+	# 	(4,28),(4+8,28),(4+16,28),(4+24,28),
+	# 	(4+24,20),(4+16,20),(4+8,20),(4,20),
+	# 	(4,12),(12,12),(20,12),(28,12),
+	# 	(28,4),(20,4),(12,4),(4,4)
+	# ]
+
+	libfarm.go_to(ls[0][0],ls[0][1])
+	count = 0
 	while len(ls) > 1:
 		i = ls.pop(0)
-		libfarm.go_to(get_pos_x(),i[1])
+		libfarm.go_to_no_wrap(get_pos_x(),i[1])
 		libfarm.go_to(i[0],i[1])
 		def foo():
+			first = True
 			while True:
-				do_a_flip()
-				do_a_flip()
-				do_a_flip()
-				do_a_flip()
-				do_a_flip()
+				if first:
+					do_a_flip()
+					#do_a_flip()
+					first = False
 				spawn(6,i)
 				solve_mapped(6,500)
 				if num_items(Items.Gold) >= 9863168:
 					return
+		def bar():
+			while True:
+				while get_entity_type() != Entities.Hedge:
+					if num_items(Items.Gold) >= 9863168:
+						return
+				solve_mapped(6,500,dfs)
+				if num_items(Items.Gold) >= 9863168:
+					return
+		def bar2():
+			move(North)
+			move(North)
+			while True:
+				while get_entity_type() != Entities.Hedge:
+					if num_items(Items.Gold) >= 9863168:
+						return
+				solve_mapped(8,500,dfs)
+				if num_items(Items.Gold) >= 9863168:
+					return
 		spawn_drone(foo)
+		if count < 6:
+			move(East)
+			move(East)
+			spawn_drone(bar)
+			count += 1
 	i = ls.pop()
-	libfarm.go_to(i[0],i[1])
-	spawn(6,i)
-	solve_mapped(6,300)
+	libfarm.go_to_no_wrap(i[0],i[1])
+	spawn_drone(bar2)
+	while num_items(Items.Gold) < 9863168:
+		libfarm.go_to_no_wrap(31,0)
+		spawn(8,(31,0))
+		solve_mapped(8,300)
 	while num_items(Items.Gold) < 9863168:
 		pass
 	
@@ -313,6 +349,8 @@ def map_maze(map_of_maze,size,reps,prev_dir=None):
 	cur_pos = (get_pos_x(),get_pos_y())
 	if cur_pos in map_of_maze:
 		return
+	# if get_entity_type() not in [Entities.Hedge,Entities.Treasure]:
+	# 	return
 	this_cell = test_cell(cur_pos)
 	map_of_maze[cur_pos] = this_cell
 	for i in this_cell:
@@ -327,34 +365,43 @@ def map_maze(map_of_maze,size,reps,prev_dir=None):
 		opposite = get_opposite(dir)
 		if prev_dir == None or prev_dir != opposite:
 			move(dir)
-			if get_entity_type() == Entities.Treasure:
+			ent = get_entity_type()
+			if ent == Entities.Treasure:
 				use_item(Items.Weird_Substance,size*(2**(num_unlocked(Unlocks.Mazes)-1)))
 				reps[0] -= 1
+			# elif ent != Entities.Hedge:
+			# 	return
 			map_maze(map_of_maze,size,reps,dir)
 			move(opposite)
 
 
 	return map_of_maze
 
-def solve_mapped(size,reps=0):
+def solve_mapped(size,reps=0,func=bfs):
 	map_of_maze = {}
 	orig_reps = reps
 	tmp = [reps]
 	map_maze(map_of_maze,size,tmp)
 	while reps >= 0:
 		#uncomment below for single maze leaderboard
-		# if num_items(Items.Gold) >= 9863168:
-		# 	return
+		if num_items(Items.Gold) >= 9863168:
+			return
 		target = measure()
 		cur_pos = (get_pos_x(),get_pos_y())
-		path = a_star(map_of_maze,cur_pos,target)
+		if get_entity_type() not in [Entities.Hedge,Entities.Treasure]:
+			return
+		path = func(map_of_maze,cur_pos,target)
 		while len(path) > 0:
 			i = path.pop()
 			move(i)
-			if reps % 5 == 0: #just trial and error.
+			if measure() != target:
+				break
+			if reps % 2 == 0: #just trial and error.
 				cur_pos = (get_pos_x(),get_pos_y())
 				cell = test_cell(cur_pos)
 				map_of_maze[cur_pos] = cell
+			# if get_entity_type() not in [Entities.Hedge,Entities.Treasure]:
+			# 	return
 				
 		reps -= 1
 		if reps > 0:
@@ -414,7 +461,7 @@ def bfs(map, start, target):
 	queue = [start]
 	visited = {start}
 	came_from = {}
-	
+
 	while queue:
 		current = queue.pop(0)
 		
@@ -442,5 +489,40 @@ def bfs(map, start, target):
 				visited.add(neighbor)
 				came_from[neighbor] = current
 				queue.append(neighbor)
+	
+	return []
+
+def dfs(map, start, target):
+	stack = [start]
+	visited = {start}
+	came_from = {}
+	
+	while stack:
+		current = stack.pop()
+		
+		if current == target:
+			# Reconstruct path as directions
+			path = []
+			while current in came_from:
+				prev = came_from[current]
+				dx = current[0] - prev[0]
+				dy = current[1] - prev[1]
+				if dy == 1:
+					path.append(North)
+				elif dy == -1:
+					path.append(South)
+				elif dx == 1:
+					path.append(East)
+				elif dx == -1:
+					path.append(West)
+				current = prev
+			
+			return path
+		
+		for neighbor in map[current]:
+			if neighbor not in visited:
+				visited.add(neighbor)
+				came_from[neighbor] = current
+				stack.append(neighbor)
 	
 	return []
