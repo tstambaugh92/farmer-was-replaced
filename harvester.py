@@ -600,6 +600,10 @@ def harvest_cactus_leaderboard():
 				redo.append((x,y))
 			if (x > 15 and y > 15) and lvl < 5:
 				redo.append((x,y))
+			if (x <= 15 and y > 15) and (lvl < 2 or lvl > 7):
+				redo.append((x,y))
+			if (x > 15 and y <= 15) and (lvl < 2 or lvl > 7):
+				redo.append((x,y))
 			ls.append([(x,y),lvl])
 			move(East)
 			x += 1
@@ -622,7 +626,11 @@ def harvest_cactus_leaderboard():
 				go_on = False
 				if (kill_em[0] > 15 and y > 15) and lvl < 5:
 					go_on = True
-				if (kill_em[0] <= 15 and y <=15) and lvl >= 5:
+				if (kill_em[0] <= 15 and y <= 15) and lvl >= 5:
+					go_on = True
+				if (kill_em[0] <= 15 and y > 15) and (lvl < 2 or lvl > 7):
+					go_on = True
+				if (kill_em[0] > 15 and y <= 15) and (lvl < 2 or lvl > 7):
 					go_on = True
 				if go_on:
 					i += 1
