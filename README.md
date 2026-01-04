@@ -9,6 +9,7 @@ Lots of code cleaning to be done, but my times:
 | Challenge | Time | Rank |
 |-----------|------|------|
 | Cactus Single | 00:24.674 | #36 |
+| Cactus | 00:44.160 | #66 |
 | Dinosaur | 17:45.008 | #68 |
 | Maze | 02:27.768 | #23 |
 | Maze Single | 02:41.476 | #21 |
@@ -17,6 +18,12 @@ Lots of code cleaning to be done, but my times:
 ## Cactus Single
 
 This algorithm is one I came up with from trial and error. I have no mathematical reason to know it works. It just hasn't failed. It's sort of like if an insertion sort carried light items to the bottom left, heavy items to the top right.
+
+## Cactus
+
+If the bottom left quadrant has cacti >= level 5, or the top right quadrant < 5,
+I kill it and replant it. If you try to reroll a cacti before it's fully grown, it keeps
+the same level, so this slows down this method a bit. It still saved me 10 seconds.
 
 ## Maze
 

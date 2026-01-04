@@ -168,6 +168,36 @@ def sun_buckets(tuple_list):
 			y = new_bucket[-1][1]
 		new_list = new_list + new_bucket
 	return new_list
+
+
+#items should be a list of lists containing a tuple of X,Y cords, and a value
+#[ [(x,y), value],[(x2,y2),value2] ]
+#dir should be a swap direction. North/South/East/West.
+#Make dir east will sort a row with greatest on the right.
+def insert_sort(items,dir):
+	l = len(items)
+	def insert_sort_high_first():
+		for i in range(1,l):
+			for j in range(i,0,-1):
+				if items[j][1] > items[j-1][1]:
+					go_swap(items[j][0],dir)
+					items[j][1],items[j-1][1] = items[j-1][1],items[j][1]
+				else:
+					break
+	
+	def insert_sort_low_first():
+		for i in range(1,l):
+			for j in range(i,0,-1):
+				if items[j][1] < items[j-1][1]:
+					go_swap(items[j-1][0],dir)
+					items[j][1],items[j-1][1] = items[j-1][1],items[j][1]
+				else:
+					break
+
+	if dir in [North,East]:
+		insert_sort_low_first()
+	else: #South,West
+		insert_sort_high_first()
 	
 #returns list sorted in such a way that
 #each X,Y cordinate is the closest to the 

@@ -584,7 +584,92 @@ def harvest_cactus(x,y,size):
 		# 	direction = East
 	libfarm.cactus_sort(crop_map,(x,y))
 	return
-			
+
+def harvest_cactus_leaderboard():
+
+	def jobA():
+		ls = []
+		redo = []
+		y = get_pos_y()
+		x = 0
+		for i in range(32):
+			till()
+			plant(Entities.Cactus)
+			lvl = measure()
+			if (x <= 15 and y <= 15) and lvl >= 5:
+				redo.append((x,y))
+			if (x > 15 and y > 15) and lvl < 5:
+				redo.append((x,y))
+			ls.append([(x,y),lvl])
+			move(East)
+			x += 1
+		while len(redo) > 0:
+			i = 0
+			l = len(redo)
+			for j in range(l):
+				if i > l - 1:
+					break
+				kill_em = redo[i]
+				libfarm.go_to(kill_em[0],kill_em[1])
+				while not can_harvest():
+					pass
+				till()
+				till()
+				plant(Entities.Cactus)
+				use_item(Items.Water)
+				lvl = measure()
+				ls[kill_em[0]][1] = lvl
+				go_on = False
+				if (kill_em[0] > 15 and y > 15) and lvl < 5:
+					go_on = True
+				if (kill_em[0] <= 15 and y <=15) and lvl >= 5:
+					go_on = True
+				if go_on:
+					i += 1
+				else:
+					redo.pop(i)
+			# l = len(redo)
+			# for i in range(l):
+			# 	kill_em = redo[l]
+			# 	libfarm.go_to(kill_em[0],kill_em[1])
+			# 	while not can_harvest():
+			# 		pass
+			# 	till()
+			# 	till()
+			# 	plant(Entities.Cactus)
+			# 	lvl = measure
+			# 	ls[kill_em[0]][1] = lvl
+
+
+		libfarm.insert_sort(ls,East)
+
+	def jobB():
+		x = get_pos_x()
+		y = 0
+		ls = []
+		for i in range(32):
+			lvl = measure()
+			ls.append([(x,y),lvl])
+			move(North)
+			y += 1
+		libfarm.insert_sort(ls,North)
+
+	for col in range(31):
+		spawn_drone(jobA)
+		move(North)
+	jobA()
+	libfarm.go_home()
+	while num_drones() > 1:
+		pass
+	for row in range(31):
+		spawn_drone(jobB)
+		move(East)
+	jobB()
+	libfarm.go_to(31,31)
+	while num_drones() > 1:
+		pass
+	harvest()
+
 def clear_field():
 	plant_crop_para((0,get_world_size()-1),(get_world_size(),get_world_size()),Entities.Grass)
 
