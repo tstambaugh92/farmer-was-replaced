@@ -58,7 +58,7 @@ def solve_maze_leaderboard():
 		(3,3),(10,3),(17,3),(24,3),(28,28),(28,21),(28,14)
 	]
 
-	#this is for the 2nd drone in other mazes
+	#the bar functions spawn the 7x7 mazes
 	def bar():
 		def bar2():
 			first = True
@@ -71,15 +71,6 @@ def solve_maze_leaderboard():
 					first = False
 				spawn(7,j)
 				solve_mapped(7,500,bfs)
-				if num_items(Items.Gold) >= 9863168:
-					return
-
-		def bar3():
-			while True:
-				while get_entity_type() != Entities.Hedge:
-					if num_items(Items.Gold) >= 9863168:
-						return
-				solve_mapped(8,500,bfs)
 				if num_items(Items.Gold) >= 9863168:
 					return
 		while len(ls2) > 1:
