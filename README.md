@@ -11,7 +11,7 @@ Lots of code cleaning to be done, but my times:
 | Cactus Single | 00:24.674 | #36 |
 | Cactus | 00:41.878 | #55 |
 | Dinosaur | 17:45.008 | #68 |
-| Maze | 02:15.187 | #15 |
+| Maze | 01:53.476 | #8 |
 | Maze Single | 02:41.476 | #21 |
 | Pumpkins | 07:33.905 | #41 |
 
@@ -27,7 +27,11 @@ the same level, so this slows down this method a bit. It still saved me 10 secon
 
 ## Maze
 
-24 6x6 mazes, 1 8x8 maze. 7 of the mazes have a second drone using a dfs instead of bfs.
+Winning combo was 25 5x5 mazes, 7 7x7 mazes. Cut down on wasted space, which was
+much better than cramming two drones in the same maze.
+
+Putting two drones in the same maze often ended up with them in sync so the 2nd didn't
+really add much. Not nothing, but not much.
 
 ## Maze Single
 

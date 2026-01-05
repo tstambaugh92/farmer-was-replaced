@@ -1,7 +1,7 @@
 import libfarm
 import harvester
 
-leaderboard_run(Leaderboards.Pumpkins,"foo",60)
+leaderboard_run(Leaderboards.Maze,"foo",60)
 	
 
 	
