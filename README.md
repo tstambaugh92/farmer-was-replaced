@@ -11,9 +11,10 @@ Lots of code cleaning to be done, but my times:
 | Cactus Single | 00:24.674 | #36 |
 | Cactus | 00:41.878 | #55 |
 | Dinosaur | 17:45.008 | #68 |
-| Maze | 01:53.476 | #8 |
-| Maze Single | 02:41.476 | #21 |
+| Maze | 01:53.476 | #9 |
+| Maze Single | 02:41.476 | #22 |
 | Pumpkins | 07:33.905 | #41 |
+| Fastest Reset | 3:37:49.491 | #95 |
 
 ## Cactus Single
 
@@ -40,3 +41,7 @@ Still BFS
 ## Pumpkins
 
 16 patches of 6x6 pumpkins with 2 drones each. The amount of water and fertilizer to use was just trial and error.
+
+## Fastest Reset
+
+I really just wanted to be done with achivements at this point. There's over an our of trivial savings to do here and obviously much more than that to get a top time. But hey, top 100.

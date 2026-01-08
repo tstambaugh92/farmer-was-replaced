@@ -11,6 +11,7 @@ def snake():
 def cheese():
 	size = get_world_size()
 	pos = [get_pos_x(),get_pos_y()]
+	change_hat(Hats.Dinosaur_Hat)
 	keep_going = True
 	while keep_going:
 		while pos[1] > 0 and keep_going:
@@ -40,6 +41,7 @@ def try_to_do_better_lol():
 	pos = libfarm.go_to_no_wrap(0,size - 1)
 	change_hat(Hats.Dinosaur_Hat)
 	goal = measure()
+	quick_print("New goal at " + str(goal))
 	score = 0
 	keep_going = True
 	while keep_going:
@@ -48,26 +50,33 @@ def try_to_do_better_lol():
 		pos = libfarm.go_to_no_wrap(goal[0],pos[1])
 		pos = libfarm.go_to_no_wrap(pos[0],goal[1])
 		goal = measure()
+		quick_print("New goal at " + str(goal))
 		score += 1
 		length = (score / size_mod) // 1
 		if pos[1] == size_mod:
-			move(South)
+			keep_going = move(South)
 			pos[1] -= 1
+			quick_print("Went South, now at " + str(pos))
 			if pos[0] == goal[0] and pos[1] == goal[1]:
 				goal = measure()
+				quick_print("New goal at " + str(goal))
 				score += 1
 				length = (score / size_mod) // 1
 		while goal[1] > length + 3 and goal[0] > 0 and goal[1] < pos[1]:
 			pos = libfarm.go_to_no_wrap(goal[0],pos[1])
 			pos = libfarm.go_to_no_wrap(pos[0],goal[1])
+			quick_print("Went to goal, now at " + str(pos))
 			length = (score / size_mod) // 1
 			goal = measure()
+			quick_print("New goal at " + str(goal))
 			score+=1
 			length = (score / size_mod) // 1
-			move(South)
+			keep_going = move(South)
 			pos[1] -= 1
+			quick_print("Went South, now at " + str(pos))
 			if pos[0] == goal[0] and pos[1] == goal[1]:
 				goal = measure()
+				quick_print("New goal at " + str(goal))
 				score += 1
 				length = (score / size_mod) // 1
 			if goal[1] == pos[1]:
@@ -81,8 +90,10 @@ def try_to_do_better_lol():
 		while pos[0] < size_mod:
 			keep_going = move(East)
 			pos[0] += 1
+			quick_print("Went East, now at " + str(pos))
 			if pos[0] == goal[0] and pos[1] == goal[1]:
 				goal = measure()
+				quick_print("New goal at " + str(goal))
 				score += 1
 				length = (score / size_mod) // 1
 		length = (score / size_mod) // 1
@@ -91,49 +102,63 @@ def try_to_do_better_lol():
 		while pos[1] > length:
 			keep_going = move(South)
 			pos[1] -= 1
+			quick_print("Went South, now at " + str(pos))
 			if pos[0] == goal[0] and pos[1] == goal[1]:
 				goal = measure()
+				quick_print("New goal at " + str(goal))
 				score += 1
 		while length > 0:
 			while pos[0] > 1:
 				keep_going = move(West)
 				pos[0] -= 1
+				quick_print("Went West, now at " + str(pos))
 				if goal[0] == pos[0] and pos[1] == goal[1]:
 					goal = measure()
+					quick_print("New goal at " + str(goal))
 					score += 1
 			keep_going = move(South)
 			pos[1] -= 1
+			quick_print(pos)
 			if goal[0] == pos[0] and pos[1] == goal[1]:
 					goal = measure()
+					quick_print("New goal at " + str(goal))
 					score += 1
 			while pos[0] < size_mod:
 				keep_going = move(East)
 				pos[0] += 1
+				quick_print("Went East, now at " + str(pos))
 				if goal[0] == pos[0] and pos[1] == goal[1]:
 					goal = measure()
+					quick_print("New goal at " + str(goal))
 					score += 1
 			keep_going = move(South)
 			pos[1] -= 1
+			quick_print(pos)
 			if goal[0] == pos[0] and pos[1] == goal[1]:
 					goal = measure()
+					quick_print("New goal at " + str(goal))
 					score += 1
 			length -= 2
 		while pos[0] > 0:
 			keep_going = move(West)
 			pos[0] -= 1
+			quick_print("Went West, now at " + str(pos))
 			if goal[0] == pos[0] and pos[1] == goal[1]:
 				goal = measure()
+				quick_print("New goal at " + str(goal))
 				score += 1
 		while pos[1] < size_mod and pos[1] <= goal[1]:
 			keep_going = move(North)
 			pos[1] += 1
+			quick_print("Went North, now at " + str(pos))
 			if goal[0] == pos[0] and pos[1] == goal[1]:
 				goal = measure()
+				quick_print("New goal at " + str(goal))
 				score += 1
 			if not keep_going:
 				#why the fuck is this even happening sometimes like 1 in 4 runs
 				keep_going = True
-				pos = [0,size_mod]
+				pos = [get_pos_x(),get_pos_y()]
+				quick_print("Position unfucked to " + str(pos))
 				break
-	while True:
-		pass
+	clear()

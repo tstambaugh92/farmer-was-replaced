@@ -231,7 +231,7 @@ def cactus_sort(crop_map,origin):
 	
 	# Primary loop: start at (0,n) and work down each column
 	for start_row in range(rows):
-		for start_col in range(7, -1, -1):	#7 -> cols - 1
+		for start_col in range(cols - 1, -1, -1):
 			
 			# Keep working on this starting position until no swaps occur
 			while True:
@@ -329,3 +329,8 @@ def cactus_sort(crop_map,origin):
 				# If no swaps occurred in this complete iteration, move to next starting position
 				if total_swaps_this_iteration == 0:
 					break
+
+def mark_time(msg):
+	quick_print(msg)
+	quick_print("Time: " + str(get_time()))
+	quick_print("---")

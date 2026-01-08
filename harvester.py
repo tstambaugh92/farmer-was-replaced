@@ -377,7 +377,7 @@ def harvest_plant(x,y,size,cur_plant,tree=False,fertilize=False):
 		else:
 			direction = South
 
-def harvest_plant_rec(xy,size,cur_plant,tree=False,fertilize=False):
+def harvest_plant_crop(xy,size,cur_plant,tree=False,fertilize=False):
 	if cur_plant in must_till_ls:
 		must_till = True
 	else:
@@ -421,6 +421,9 @@ def harvest_plant_rec(xy,size,cur_plant,tree=False,fertilize=False):
 		else:
 			direction = South
 
+#xy = (X,Y) top left of rect
+#size = (W,H) of rec
+#will try to water
 def harvest_crop_para(xy,size,crop,trees=False,fertilize=False,forever=False):
 	if max_drones() >= size[1]:
 		drone_count = size[1]
@@ -432,26 +435,37 @@ def harvest_crop_para(xy,size,crop,trees=False,fertilize=False,forever=False):
 		orig_index = index
 		libfarm.go_to(xy[0],xy[1] - index)
 		while True:
-			for _ in range(size[0]):
+			for i in range(size[0]):
+				to_plant = crop
+				if trees:
+					if get_pos_y() % 2 == 0:
+						if get_pos_x() % 2 == 0:
+							to_plant = Entities.Tree
+					elif get_pos_x() % 2 != 0:
+						to_plant = Entities.Tree
 				if can_harvest():
 					harvest()
-					if crop in must_till_ls:
+					if to_plant in must_till_ls:
 						if get_ground_type() != Grounds.Soil:
 							till()
 					else:
 						if get_ground_type() != Grounds.Grassland:
 							till()
-					plant(crop)
+					plant(to_plant)
+					if(fertilize):
+						use_item(Items.Fertilizer)
 					if get_water() < gbl_water_rate:
 						use_item(Items.Water)
 				elif get_entity_type() == None:
-					if crop in must_till_ls:
+					if to_plant in must_till_ls:
 						if get_ground_type() != Grounds.Soil:
 							till()
 					else:
 						if get_ground_type() != Grounds.Grassland:
 							till()
-					plant(crop)
+					plant(to_plant)
+					if(fertilize):
+						use_item(Items.Fertilizer)
 				move(East)
 			index += drone_count
 			if index >= size[1]:
@@ -537,42 +551,28 @@ def plant_crop_para(xy,size,crop):
 	while num_drones() > 1:
 		pass
 
-def harvest_cactus(x,y,size):
+def harvest_cactus(x,y,size,fertilize=False):
 	crop_map = []
 
 	# libfarm.go_to(x+size-1,y)
 	# if can_harvest():
 	# 	harvest()
 
-	#libfarm.go_to(x,y)
+	libfarm.go_to(x,y)
 	direction = East
 	for i in range(size):
 		new_row = []
 		for j in range(size):
-			# if can_harvest():
-			# 	harvest()
-			# if get_ground_type() != Grounds.Soil:
-			# 	till()
-			till()
+			if can_harvest():
+				harvest()
+			if get_ground_type() != Grounds.Soil:
+				till()
 			plant(Entities.Cactus)
+			if fertilize:
+				use_item(Items.Fertilizer)
 
 			lvl = measure()
-			# if direction == East:
-			while lvl > j+5 or lvl < i-5:
-				till()
-				till()
-				plant(Entities.Cactus)
-				lvl = measure()
-			
 			new_row.append(lvl)
-			# else:
-			# 	if lvl < j-4:
-			# 		harvest()
-			# 		plant(Entities.Cactus)
-			# 		lvl = measure()
-			# 	new_row.insert(0,lvl)
-			# if j < size - 1:
-			# 	move(direction)
 			move(East)
 				
 		#crop_map.append(new_row)
@@ -582,7 +582,7 @@ def harvest_cactus(x,y,size):
 		# 	direction = West
 		# else:
 		# 	direction = East
-	libfarm.cactus_sort(crop_map,(x,y))
+	libfarm.cactus_sort(crop_map,(0,get_world_size()-1))
 	return
 
 def harvest_cactus_leaderboard():
