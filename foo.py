@@ -4,9 +4,19 @@ import snake
 import maze
 
 clear()
-while num_items(Items.Wood) < 10000000000:
-	harvester.harvest_crop_para((31,31),(32,32),Entities.Grass,True,False,False)
-
+set_world_size(3)
+for j in range(3):
+    for i in range(3):
+        till()
+        move(East)
+    move(North)
+    
+while True:
+	for j in range(3):
+		for i in range(3):
+			use_item(Items.Water)
+			move(East)
+		move(North)
 
 
 
