@@ -1,3 +1,7 @@
+def move_dir(dir,spaces):
+    for _ in range(spaces):
+        move(dir)
+
 def go_home():
     go_to(0,0)
         
@@ -69,4 +73,24 @@ def center():
         move(East)
     while get_pos_y() != s:
         move(North)
+
+
+def drill_layers(layers):
+    def runner():
+        for _ in range(layers):
+            dig()
+    ws = get_world_size()
+    max_bots = max_drones()
+    if ws < max_bots:
+        max_bots = ws
+    zone_size = (ws**2 / max_bots) ** 0.5 // 1
+    go_to(zone_size-1,zone_size-1)
+    for _ in range(max_bots-1):
+        spawn_drone(runner)
+        if get_pos_x() + zone_size > ws:
+            move_dir(North,zone_size)
+            go_to(zone_size,get_pos_y())
+        else:
+            move_dir(East,zone_size)
+    runner()
 
