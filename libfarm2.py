@@ -3,9 +3,14 @@ def move_dir(dir,spaces):
         move(dir)
 
 def go_home():
-    go_to(0,0)
+    go_to((0,0))
         
-def go_to(x,y):
+def go_to(cords):
+    if len(cords) < 2:
+        return
+    else:
+        x = cords[0]
+        y = cords[1]
     if (x > get_world_size() - 1 or
         y > get_world_size() - 1 or
         x < 0 or y < 0):
@@ -74,23 +79,29 @@ def center():
     while get_pos_y() != s:
         move(North)
 
+def get_world_size_tup():
+    return (get_world_size(),get_world_size())
 
-def drill_layers(layers):
-    def runner():
-        for _ in range(layers):
-            dig()
+def func_on_land(start=(-1,-1),end=(-1,-1),action=print,args = []):
     ws = get_world_size()
-    max_bots = max_drones()
-    if ws < max_bots:
-        max_bots = ws
-    zone_size = (ws**2 / max_bots) ** 0.5 // 1
-    go_to(zone_size-1,zone_size-1)
-    for _ in range(max_bots-1):
-        spawn_drone(runner)
-        if get_pos_x() + zone_size > ws:
-            move_dir(North,zone_size)
-            go_to(zone_size,get_pos_y())
-        else:
-            move_dir(East,zone_size)
-    runner()
+    if start == (-1,-1) or end == (-1,-1):
+        start = (0,0)
+        end = (ws-1,ws-1)
+
+    def take_action(args):
+        for _ in range(rows):
+            args[0](args[1])
+            move(North)
+
+    go_to(start)
+    cols = end[1] - start[1] + 1
+    rows = end[0] - start[0] + 1
+
+    for _ in range(cols-1):
+        spawn_drone(take_action,[action,args])
+        move(East)
+    take_action([action,args])
+
+
+
 

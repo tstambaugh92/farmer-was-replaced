@@ -1,3 +1,5 @@
-import libfarm2 as lf2
+import libfarm2
 
-lf2.go_home()
+move(East)
+print(measure())
+

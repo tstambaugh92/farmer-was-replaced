@@ -29,18 +29,14 @@ def harvest_stone(offset=0):
 
 
 def harvest_coal():
+    #This assumes coal veins can go vertically, which is not true.
+    #Not deleting this second because this logic can be repurposes for iron
+    #Also remove the god damn jitter.
     def find_coal():
-        libfarm2.go_home()
-        max_checks = get_world_size() ** 2
-        checks = 0
-        while checks <= max_checks:
-            if get_ground_type() == Grounds.Coal:
-                return True
-            checks += 1
-            move(East)
-            if get_pos_x() == 0:
-                move(North)
-        return False
+        libfarm2.center()
+        while get_ground_type() != Grounds.Coal:
+            dig()
+        return True
 
     def map_vein(vein):
         if libfarm2.get_pos() in vein:
@@ -118,9 +114,81 @@ def harvest_coal():
                     next.append(libfarm2.get_pos())
 
 def harvest_rice():
-    pass
+    libfarm2.center()
+    clay_spaces = []
+    next_clay = [1]
+    def level_area(z_level):
+        libfarm2.go_home()
+        for _ in range(get_world_size() ** 2):
+            while get_pos_z() > z_level and get_ground_type() != Grounds.Clay:
+                dig()
+            if get_ground_type() == Grounds.Clay:
+                cur_pos = libfarm2.get_pos()
+                clay_spaces.append(cur_pos)
+            move(East)
+            if get_pos_x() == 0:
+                move(North)
+
+    def plant_list(l):
+        for i in l:
+            libfarm2.go_to(i[0],i[1])
+            plant(Entities.Rice)
+            use_item(Items.Water)
+    while get_ground_type() != Grounds.Clay:
+        dig()
+    level_area(get_pos_z())
+    plant_list(clay_spaces)
+
+    while len(next_clay) > 0:
+        next_clay = []
+        to_pop = []
+        while len(clay_spaces) > 0:
+            for i in range(len(clay_spaces)):
+                libfarm2.go_to(clay_spaces[i][0],clay_spaces[i][1])
+                if can_harvest():
+                    harvest()
+                    dig()
+                    if get_ground_type() == Grounds.Clay:
+                        next_clay.append(libfarm2.get_pos())
+                    to_pop.append(i)
+            idx = 0
+            for i in to_pop:
+                clay_spaces.pop(i - idx)
+                idx += 1
+                
+
+        clay_spaces = []
+        for i in next_clay:
+            clay_spaces.append(i)
+
+        plant_list(clay_spaces)
 
 def harvest_bamboo():
+    def plant_action(args=[]):
+        if get_ground_type() != Grounds.Soil:
+            till()
+        plant(Entities.Bamboo)
+        use_item(Items.Water)
+
+    def harvest_action(args=[]):
+
+        m = measure()
+        if m == None:
+            return
+        hover(m)
+        if can_harvest():
+            harvest()
+            hover(1)
+            plant(Entities.Bamboo)
+            if get_water() < .4:
+                use_item(Items.Water)
+    
+
+    libfarm2.func_on_land((-1,-1),(-1,-1),plant_action)
+    while True:
+        libfarm2.func_on_land((-1,-1),(-1,-1),harvest_action)
+
+def harvest_iron():
     pass
 
 #mini-games
