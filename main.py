@@ -1,8 +1,11 @@
-import libfarm
-import harvester
+import libfarm2 as libfarm2
+import harvester as harvester
 
-leaderboard_run(Leaderboards.Fastest_Reset,"reset_01",20)
-	
+def main():
+    set_world_size(9)
+    libfarm2.go_home()
+    libfarm2.center()
 
-	
-	
+main()
+while True:
+    do_a_flip()
